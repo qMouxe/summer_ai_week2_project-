@@ -82,16 +82,57 @@ def depthFirstSearch(problem: SearchProblem):
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
     """
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    stack = util.Stack()
+    visited = []
+    start_state = problem.getStartState()
+
+    # Each item in the stack is a tuple containing (state, path)
+    stack.push((start_state, []))
+
+    while not stack.isEmpty():
+        current_state, actions = stack.pop()
+
+        if problem.isGoalState(current_state):
+            return actions
+
+        if current_state not in visited:
+            visited.append(current_state)
+
+            for node in problem.getSuccessors(current_state):
+                if node[0] not in visited:
+                    new_path = actions + [node[1]]
+                    stack.push((node[0], new_path))
+
+
+    # Return an empty list if no path to the goal is found
+
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    queue = util.Queue()
+    visited = set()
+    start_state = problem.getStartState()
+
+    # Each item in the queue is a tuple containing (state, path)
+    queue.push((start_state, []))
+
+    while not queue.isEmpty():
+        current_state, actions = queue.pop()
+
+        if problem.isGoalState(current_state):
+            return actions
+
+        if current_state not in visited:
+            visited.add(current_state)
+
+            for successor_state, action, _ in problem.getSuccessors(current_state):
+                if successor_state not in visited:
+                    queue.push((successor_state, actions + [action]))
+
+    return []
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
